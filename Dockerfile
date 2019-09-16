@@ -1,30 +1,38 @@
-#
-# Nginx Dockerfile
-#
-# https://github.com/dockerfile/nginx
-#
+#Download base image ubuntu 16.04
+FROM ubuntu:16.04
 
-# Pull base image.
-FROM dockerfile/ubuntu
+# Update Software repository
+RUN apt-get update
 
-# Install Nginx.
-RUN \
-  add-apt-repository -y ppa:nginx/stable && \
-  apt-get update && \
-  apt-get install -y nginx && \
-  rm -rf /var/lib/apt/lists/* && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
-  chown -R www-data:www-data /var/lib/nginx
+# Install nginx, php-fpm and supervisord from ubuntu repository
+RUN apt-get install -y nginx php7.0-fpm supervisor && \
+    rm -rf /var/lib/apt/lists/*
 
-# Define mountable directories.
+#Define the ENV variable
+ENV nginx_vhost /etc/nginx/sites-available/default
+ENV php_conf /etc/php/7.0/fpm/php.ini
+ENV nginx_conf /etc/nginx/nginx.conf
+ENV supervisor_conf /etc/supervisor/supervisord.conf
+
+# Enable php-fpm on nginx virtualhost configuration
+COPY default ${nginx_vhost}
+RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${php_conf} && \
+    echo "\ndaemon off;" >> ${nginx_conf}
+
+#Copy supervisor configuration
+COPY supervisord.conf ${supervisor_conf}
+
+RUN mkdir -p /run/php && \
+    chown -R www-data:www-data /var/www/html && \
+    chown -R www-data:www-data /run/php
+
+# Volume configuration
 VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
-# Define working directory.
-WORKDIR /etc/nginx
+# Configure Services and Port
+COPY start.sh /start.sh
+CMD ["./start.sh"]
 
-# Define default command.
-CMD ["nginx"]
+COPY index.html /var/www/html/index.html
 
-# Expose ports.
-EXPOSE 80
-EXPOSE 443
+EXPOSE 80 443
