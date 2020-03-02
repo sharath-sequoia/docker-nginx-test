@@ -10,6 +10,7 @@ pipeline {
         {
             def causes = currentBuild.getBuildCauses()
             echo causes.toString()
+            echo "Hello world!"
         }
     }
 }
