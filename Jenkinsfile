@@ -13,7 +13,7 @@ pipeline {
               echo causes.toString()
               echo "Hello world!"
 
-              if( cause.toString().contains("push by") )
+              if( causes.toString().contains("push by") )
               {
                 echo "The build was caused by Git push"
               }
