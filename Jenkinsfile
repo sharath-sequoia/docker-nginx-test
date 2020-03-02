@@ -9,11 +9,12 @@ pipeline {
         {
           steps{
             script{
-              def causes = currentBuild.getBuildCauses()
-              echo causes.toString()
-              echo "Hello world!"
+              //def causes = currentBuild.getBuildCauses()
+              //echo causes.toString()
+              //echo "Hello world!"
+              def causeDescription = currentBuild.getBuildCauses()[0].shortDescription
 
-              if( causes.toString().contains("push by") )
+              if( causeDescription.contains("push by") )
               {
                 echo "The build was caused by Git push"
               }
