@@ -14,7 +14,9 @@ pipeline {
 
         stage('Stage1')
         {
-          when{ env.BUILD_CAUSE 'manual'}
+          when {
+              expression { env.BUILD_CAUSE == /(manual)/ }
+          }
           steps{
             script{
               def causes = currentBuild.getBuildCauses()
