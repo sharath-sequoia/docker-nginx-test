@@ -5,12 +5,15 @@ pipeline {
     }
 
     stages {
-
         stage('Stage1')
         {
-            def causes = currentBuild.getBuildCauses()
-            echo causes.toString()
-            echo "Hello world!"
+          steps{
+            script{
+              def causes = currentBuild.getBuildCauses()
+              echo causes.toString()
+              echo "Hello world!"
+            }
+          }
         }
     }
 }
