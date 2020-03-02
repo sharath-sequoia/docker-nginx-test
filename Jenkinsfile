@@ -17,7 +17,7 @@ pipeline {
         stage('Stage1')
         {
           when {
-              expression { env.BUILD_CAUSE == /(manual)/ }
+              expression { env.BUILD_CAUSE == 'manual' }
           }
           steps{
             script{
