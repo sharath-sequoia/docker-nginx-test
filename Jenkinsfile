@@ -5,8 +5,16 @@ pipeline {
     }
 
     stages {
+        stage('env set')
+        {
+          steps{
+            env.BUILD_CAUSE = currentBuild.getBuildCauses()[0].shortDescription.contains("push by") ? 'push' : 'manual'
+          }
+        }
+
         stage('Stage1')
         {
+          when{ env.BUILD_CAUSE 'manual'}
           steps{
             script{
               def causes = currentBuild.getBuildCauses()
