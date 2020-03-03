@@ -4,6 +4,11 @@ pipeline {
         skipStagesAfterUnstable()
     }
 
+    parameters {
+        string(name: 'tag', defaultValue: '1.0', description: 'Which tag/branch to build?')
+        choice(name: 'environment', choices: ['dev', 'staging', 'uat', 'pre-production', 'production'], description: 'Deploy to which environment?')
+    }
+
     stages {
         stage('env set')
         {
