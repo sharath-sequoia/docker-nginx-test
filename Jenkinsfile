@@ -3,9 +3,6 @@ pipeline {
     options {
         skipStagesAfterUnstable()
     }
-
-    defaultChoices = ["foo", "bar", "baz"]
-    choices = createChoicesWithPreviousChoice(defaultChoices, "baz")
 /*
     parameters {
         string(name: 'tag', defaultValue: '1.0', description: 'Which tag/branch to build?')
@@ -15,7 +12,7 @@ pipeline {
 */
 
     parameters {
-            choice(name: "CHOICE", choices: choices.join("\n"))
+            choice(name: "CHOICE", choices: createChoicesWithPreviousChoice(["foo", "bar", "baz"], "baz").join("\n"))
     }
 
     stages {
