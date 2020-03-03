@@ -3,17 +3,6 @@ pipeline {
     options {
         skipStagesAfterUnstable()
     }
-/*
-    parameters {
-        string(name: 'tag', defaultValue: '1.0', description: 'Which tag/branch to build?')
-        choice(name: 'environment', choices: ['dev', 'staging', 'uat', 'pre-production', 'production'], description: 'Deploy to which environment?')
-    }
-
-*/
-
-    parameters {
-            choice(name: "CHOICE", choices: createChoicesWithPreviousChoice(["foo", "bar", "baz"], "baz").join("\n"))
-    }
 
     stages {
         stage('env set')
@@ -49,14 +38,4 @@ pipeline {
           }
         }
     }
-}
-
-
-def List createChoicesWithPreviousChoice(List defaultChoices, String previousChoice) {
-    if (previousChoice == null) {
-       return defaultChoices
-    }
-    choices = defaultChoices.minus(previousChoice)
-    choices.add(0, previousChoice)
-    return choices
 }
